@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendease - AI-Powered Attendance System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #f8f9fa;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --sidebar-width: 280px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(22, 33, 62, 0.95);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo span:first-child {
+            color: var(--primary);
+        }
+
+        .logo span:last-child {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(to bottom, var(--darker), var(--dark));
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            color: var(--light);
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar-link i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(67, 97, 238, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 5%;
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 0;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 201, 240, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
+        }
+
+        .hero-image {
+            max-width: 500px;
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--light);
+            margin-bottom: 1rem;
+        }
+
+        .section-title h2 span {
+            color: var(--accent);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: transparent;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            display: inline-block;
+            padding: 1.5rem;
+            border-radius: 50%;
+            background: rgba(76, 201, 240, 0.1);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: rgba(76, 201, 240, 0.2);
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Process Section */
+        .process-section {
+            padding: 5rem 0;
+            background: rgba(22, 33, 62, 0.5);
+            border-radius: 30px;
+            margin: 3rem 0;
+        }
+
+        .process-container {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .process-line {
+            position: absolute;
+            height: 100%;
+            width: 4px;
+            background: var(--primary);
+            left: 25px;
+            top: 0;
+            border-radius: 4px;
+        }
+
+        .process-step {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .step-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Stats Cards */
+        .stats-section {
+            padding: 3rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(67, 97, 238, 0.1);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 5rem 0;
+            background: rgba(22, 33, 62, 0.5);
+            border-radius: 30px;
+            margin: 3rem 0;
+            padding: 5%;
+        }
+
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .about-image {
+            flex: 1;
+            
+        }
+
+        .about-image img {
+           height:60%;
+           width: 80%;
+           
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+        }
+
+        .about-title span {
+            color: var(--accent);
+        }
+
+        .about-text {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+
+        /* Bento Grid Features Section */
+.bento-features-section {
+    padding: 5rem 0;
+    position: relative;
+    background-color: rgba(26, 26, 46, 0.8);
+    border-radius: 30px;
+    margin: 5rem 0;
+    overflow: hidden;
+}
+
+/* Ribbon and Connected Circles */
+.ribbon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.ribbon {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    height: 8px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.ribbon-segment {
+    flex: 1;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+
+.ribbon-segment:nth-child(2) {
+    transform: translateY(-15px);
+}
+
+.ribbon-segment::before,
+.ribbon-segment::after {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background-color: var(--dark);
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.6);
+}
+
+.ribbon-segment::before {
+    left: -10px;
+}
+
+.ribbon-segment::after {
+    right: -10px;
+}
+
+.feature-circles {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+}
+
+.feature-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.circle-inner {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 25px rgba(76, 201, 240, 0.3);
+    transition: all 0.3s ease;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.circle-inner i {
+    font-size: 2rem;
+    color: white;
+}
+
+.circle-label {
+    font-weight: 600;
+    color: var(--light);
+    margin-top: 0.5rem;
+}
+
+.feature-circle:hover .circle-inner {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(76, 201, 240, 0.5);
+}
+
+/* Bento Grid Layout */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.bento-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.bento-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.bento-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-color: rgba(76, 201, 240, 0.3);
+}
+
+.bento-item:hover::before {
+    opacity: 1;
+}
+
+.bento-item.wide {
+    grid-column: span 1.5;
+}
+
+.bento-content {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+.bento-icon {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.bento-item:hover .bento-icon {
+    transform: scale(1.1);
+}
+
+.bento-content h3 {
+    font-size: 1.3rem;
+    color: var(--light);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.bento-content p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.feature-badge {
+    margin-top: auto;
+}
+
+.feature-badge span {
+    background: rgba(76, 201, 240, 0.15);
+    color: var(--accent);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Responsive Bento Grid */
+@media (max-width: 992px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ribbon {
+        max-width: 400px;
+    }
+    
+    .bento-item.wide {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bento-item.wide {
+        grid-column: span 1;
+    }
+    
+    .feature-circles {
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+    }
+    
+    .ribbon {
+        display: none;
+    }
+}
+        /* Contact Section */
+        .contact-section {
+            padding: 5rem 0;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(76, 201, 240, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .contact-details h4 {
+            color: var(--light);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-details p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .contact-map {
+            width: 100%;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .contact-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+/* footer 2nd */
+
+/* Footer Styles */
+.site-footer {
+        background: #16213e;
+        color: #f8f9fa;
+        padding: 2rem 0 0.5rem;
+        margin-top: 4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #4cc9f0;
+    }
+
+    .footer-logo i {
+        font-size: 2rem;
+    }
+
+    .footer-about {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .footer-heading {
+        color: #4cc9f0;
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+        font-weight: 600;
+    }
+
+    .footer-links {
+        list-style: none;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+        color: #4cc9f0;
+    }
+
+    .footer-contact {
+        list-style: none;
+    }
+
+    .footer-contact li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-social {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .social-icon {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.25rem;
+        transition: color 0.3s;
+    }
+
+    .social-icon:hover {
+        color: #4cc9f0;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1.5rem;
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-legal {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .footer-legal a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    .footer-legal a:hover {
+        color: #4cc9f0;
+    }
+
+    .footer-copyright {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .footer-section {
+            text-align: center;
+        }
+        
+        .footer-social {
+            justify-content: center;
+        }
+    }
+        /* Footer */
+        footer {
+            background: var(--darker);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-link {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1100px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .about-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .process-step {
+                flex-direction: column;
+            }
+
+            .process-line {
+                display: none;
+            }
+
+            .step-number {
+                margin: 0 auto;
+            }
+
+            .step-content {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <span>Attend</span><span>Ease</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#bento-features" class="nav-link">Our Solution</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Sidebar Navigation -->
+   <!-- Mobile Sidebar Navigation -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>Attendease</h2>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#features" class="sidebar-link">
+            <i class="fas fa-th-large"></i>
+            <span>Features</span>
+        </a>
+        <!-- Feature links in mobile menu -->
+        <a href="{% url 'capture_student' %}" class="sidebar-link feature-link">
+            <i class="fas fa-user-plus"></i>
+            <span>Student Registration</span>
+        </a>
+        <a href="{% url 'student-list' %}" class="sidebar-link feature-link">
+            <i class="fas fa-user-friends"></i>
+            <span>Manage Students</span>
+        </a>
+        <a href="{% url 'capture_and_recognize' %}" class="sidebar-link feature-link">
+            <i class="fas fa-camera"></i>
+            <span>Mark Attendance</span>
+        </a>
+        <a href="{% url 'student_attendance_list' %}" class="sidebar-link feature-link">
+            <i class="fas fa-list"></i>
+            <span>Attendance Details</span>
+        </a>
+        <a href="{% url 'camera_config_list' %}" class="sidebar-link feature-link">
+            <i class="fas fa-video"></i>
+            <span>Manage Cameras</span>
+        </a>
+        <!-- End of feature links -->
+        <a href="#process" class="sidebar-link">
+            <i class="fas fa-cogs"></i>
+            <span>Our Process</span>
+        </a>
+        <a href="#stats" class="sidebar-link">
+            <i class="fas fa-chart-bar"></i>
+            <span>Stats</span>
+        </a>
+        <a href="#about" class="sidebar-link">
+            <i class="fas fa-info-circle"></i>
+            <span>About</span>
+        </a>
+        <a href="#contact" class="sidebar-link">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+</aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Intelligent <span>Face Recognition</span> Attendance System</h1>
+                <p class="hero-subtitle">
+                    Revolutionize your attendance tracking with our AI-powered face recognition system. 
+                    Streamline check-ins, improve accuracy, and eliminate time-consuming manual processes.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#features" class="btn btn-primary">Explore Features <i class="fas fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn btn-outline">Contact Us</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://www.quest-me.com/wp-content/uploads/2024/09/5-KEY-BENEFITS-OF-A-SCHOOL-QUEUE-MANAGEMENT-SYSTEM-91.jpg" alt="Face Recognition System">
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="section-title">
+                <h2>Our <span>Features</span></h2>
+                <p>Discover how our AI-powered system can transform your attendance tracking</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" onclick="window.location.href='{% url 'capture_student' %}'">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3 class="feature-title">Student Registration</h3>
+                    <p class="feature-desc">Easily register new students with our intuitive face capture process.</p>
+                    <a href="{% url 'capture_student' %}" class="btn btn-outline">Register Now</a>
+                </div>
+                <div class="feature-card" onclick="window.location.href='{% url 'student-list' %}'">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3 class="feature-title">Manage Students</h3>
+                    <p class="feature-desc">Efficiently organize and manage all student profiles in one place.</p>
+                    <a href="{% url 'student-list' %}" class="btn btn-outline">Manage Now</a>
+                </div>
+                <div class="feature-card" onclick="window.location.href='{% url 'capture_and_recognize' %}'">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="feature-title">Mark Attendance</h3>
+                    <p class="feature-desc">Automatically mark attendance using our advanced facial recognition.</p>
+                    <a href="{% url 'capture_and_recognize' %}" class="btn btn-outline">Start Now</a>
+                </div>
+                <div class="feature-card" onclick="window.location.href='{% url 'student_attendance_list' %}'">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3 class="feature-title">Attendance Details</h3>
+                    <p class="feature-desc">Access comprehensive attendance records with detailed insights.</p>
+                    <a href="{% url 'student_attendance_list' %}" class="btn btn-outline">View Records</a>
+                </div>
+                <div class="feature-card" onclick="window.location.href='{% url 'camera_config_list' %}'">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="feature-title">Manage Cameras</h3>
+                    <p class="feature-desc">Configure and manage camera settings for optimal performance.</p>
+                    <a href="{% url 'camera_config_list' %}" class="btn btn-outline">Configure</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="process-section" id="process">
+            <div class="section-title">
+                <h2>Our <span>Process</span></h2>
+                <p>How our facial recognition pipeline works</p>
+            </div>
+            <div class="process-container">
+                <div class="process-line"></div>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Face Detection</h3>
+                            <p class="step-desc">Our system identifies and locates faces in real-time from camera feed.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Face Alignment</h3>
+                            <p class="step-desc">Detected faces are aligned to ensure consistent feature extraction.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Feature Extraction</h3>
+                            <p class="step-desc">AI analyzes unique facial features and converts them into biometric templates.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Face Recognition</h3>
+                            <p class="step-desc">The system matches extracted features with stored database entries.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Attendance Marking</h3>
+                            <p class="step-desc">Attendance is automatically recorded with timestamp upon successful recognition.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section" id="stats">
+            <div class="section-title">
+                <h2>System <span>Statistics</span></h2>
+                <p>Current usage metrics of our platform</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card" onclick="window.location.href='{% url 'student-list' %}'">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="stat-title">Total Students</h3>
+                    <div class="stat-value">{{ total_students }}</div>
+                </div>
+                
+                <div class="stat-card" onclick="window.location.href='{% url 'student_attendance_list' %}'">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3 class="stat-title">Attendance Records</h3>
+                    <div class="stat-value"> {{ total_attendance }}</div>
+                </div>
+                
+                <div class="stat-card" onclick="window.location.href='{% url 'student_attendance_list' %}'">
+                    <div class="stat-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <h3 class="stat-title">Check-Ins</h3>
+                    <div class="stat-value">{{ total_check_ins }}</div>
+                </div>
+                
+                <div class="stat-card" onclick="window.location.href='{% url 'student_attendance_list' %}'">
+                    <div class="stat-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h3 class="stat-title">Check-Outs</h3>
+                    <div class="stat-value">{{ total_check_outs }}</div>
+                </div>
+                
+                <div class="stat-card" onclick="window.location.href='{% url 'camera_config_list' %}'">
+                    <div class="stat-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="stat-title">Cameras</h3>
+                    <div class="stat-value"> {{ total_cameras }}</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="about">
+            <div class="section-title">
+                <h2>About <span>Attendease</span></h2>
+                <p>Learn more about our mission</p>
+            </div>
+            <div class="about-container">
+                <div class="about-image">
+                    <img src="https://img.freepik.com/free-photo/face-recognition-personal-identification-collage_23-2150165614.jpg?t=st=1745789985~exp=1745793585~hmac=155214a67f2f1b775a0a5933b95a0406c38a8d19abb40a56911573e3bbe4b559&w=740" alt="About Attendease">
+                </div>
+                <div class="about-content">
+                    <h3 class="about-title">Transforming <span>Attendance</span> Management</h3>
+                    <p class="about-text">
+                        At Attendease, we believe in leveraging cutting-edge technology to solve everyday challenges. Our AI-powered attendance system was designed to eliminate the inefficiencies of traditional roll calls while providing more accurate and reliable attendance tracking.
+                    </p>
+                    <p class="about-text">
+                        Founded by a team of AI specialists and education professionals, our system has been developed with a deep understanding of the needs of educational institutions and organizations. We combine powerful facial recognition algorithms with an intuitive user interface to create a seamless experience.
+                    </p>
+                    <p class="about-text">
+                        Our mission is to save valuable time for educators and administrators, reduce errors in attendance records, and provide powerful insights through comprehensive data analytics.
+                    </p>
+                    <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                </div>
+            </div>
+        </section>
+
+    <!-- bento  Section -->
+
+    <section class="bento-features-section" id="bento-features">
+        <div class="section-title">
+            <h2>Smart <span>Solutions</span></h2>
+            <p>Discover the advanced capabilities of our AI-powered attendance system</p>
+        </div>
+        
+        <!-- Ribbon connector -->
+        <div class="ribbon-container">
+            <div class="ribbon">
+                <div class="ribbon-segment"></div>
+                <div class="ribbon-segment"></div>
+                <div class="ribbon-segment"></div>
+            </div>
+            
+            <!-- Connected Feature Circles -->
+            <div class="feature-circles">
+                <div class="feature-circle">
+                    <div class="circle-inner">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <span class="circle-label">AI Powered</span>
+                </div>
+                <div class="feature-circle">
+                    <div class="circle-inner">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="circle-label">Secure</span>
+                </div>
+                <div class="feature-circle">
+                    <div class="circle-inner">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <span class="circle-label">Real-time</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bento Grid Layout -->
+        <div class="bento-grid">
+            <!-- First Row: 3 cards -->
+            <div class="bento-item">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-user-shield"></i></div>
+                    <h3>Anti-Spoofing Technology</h3>
+                    <p>Advanced protection against photo, video, and mask attacks with infrared depth sensing and texture analysis to ensure only real, present students are marked in attendance.</p>
+                    <div class="feature-badge">
+                        <span>99.8% Spoof Detection</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-heartbeat"></i></div>
+                    <h3>Liveness Detection</h3>
+                    <p>Multi-factor authentication with passive and active liveness checks including eye blink detection, micro-movement analysis, and 3D face mapping to verify physical presence.</p>
+                    <div class="feature-badge">
+                        <span>0.3s Detection Speed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>Instant attendance insights with live dashboards showing present/absent ratios, late arrival tracking, and attendance patterns by class, department, or time period.</p>
+                    <div class="feature-badge">
+                        <span>Live Updates</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Second Row: 2 cards -->
+            <div class="bento-item wide">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-sync-alt"></i></div>
+                    <h3>Continuous Learning System</h3>
+                    <p>Our AI model evolves over time, adapting to changing facial features like glasses, hairstyles, and facial hair. The system builds a progressive profile to maintain recognition accuracy throughout the academic year.</p>
+                    <div class="feature-badge">
+                        <span>Self-Improving</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item wide">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Privacy-First Architecture</h3>
+                    <p>GDPR and FERPA compliant with end-to-end encryption. Biometric templates cannot be reverse-engineered into facial images, ensuring student privacy while maintaining system security.</p>
+                    <div class="feature-badge">
+                        <span>256-bit Encryption</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <div class="bento-content">
+                    <div class="bento-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Adaptive Lighting Control</h3>
+                    <p>Smart exposure adjustment and low-light optimization ensures reliable recognition in various lighting conditions, from bright sunlight to dim classroom environments.</p>
+                    <div class="feature-badge">
+                        <span>0 lux Night Mode</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+         
+        
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <div class="section-title">
+                <h2>Contact <span>Us</span></h2>
+                <p>Get in touch with our team</p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Our Location</h4>
+                            <p>1st Floor Kailash, SMVDU Campus, Jammu & Kashmir, India </p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Call Us</h4>
+                            <p>+91 (960) 895-8180</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email Us</h4>
+                            <p>xmas.tree@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Office Hours</h4>
+                            <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.338865696783!2d74.95151497594084!3d32.94206167359504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391e7f68e599872f%3A0xed34304519ea1c71!2sShri%20Mata%20Vaishno%20Devi%20University!5e0!3m2!1sen!2sin!4v1745788870529!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Send us a message</h3>
+                    <form action="#" method="POST">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Your Email</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" id="subject" name="subject" class="form-control" placeholder="Enter subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" name="message" class="form-control" placeholder="Enter your message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <!-- <footer>
+        <div class="footer-content">
+            <p class="footer-text">Developed by <a href="#" class="footer-link">Tech Titans</a></p>
+            <p class="footer-text">Version 1.0 | &copy; 2023 All Rights Reserved</p>
+        </div>
+    </footer> -->
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-robot"></i>
+                        <span>AttendEase</span>
+                    </div>
+                    <p class="footer-about">
+                        AI-powered attendance system revolutionizing educational institutions with cutting-edge facial recognition technology.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+    
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Demo Request</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Resources -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community Forum</a></li>
+                        <li><a href="#">Webinars</a></li>
+                        
+                    </ul>
+                </div>
+    
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-envelope"></i> xmas.tree@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 (960) 895-8180</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 1st Floor Kailash SMVDU , India</li>
+                    </ul>
+                </div>
+            </div>
+    
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                  
+                </div>
+                <p class="footer-copyright">
+                    &copy; 2023 AttendEase Technologies. All Rights Reserved. Version 2.1.4
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+// Mobile menu toggle functionality
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+
+menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+});
+
+// Close sidebar when clicking any link
+document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 992) {
+            sidebar.classList.remove('active');
+        }
+    });
+});
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 992 && 
+        !sidebar.contains(e.target) && 
+        e.target !== menuToggle) {
+        sidebar.classList.remove('active');
+    }
+});
+
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    // Close sidebar if open
+                    sidebar.classList.remove('active');
+                    
+                    // Scroll to target
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in sidebar
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

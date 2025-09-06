@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .detail-container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .detail-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .detail-title {
+            color: var(--accent);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.8rem;
+            color: var(--light);
+        }
+
+        .detail-label {
+            min-width: 120px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-authorized {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .status-unauthorized {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+        }
+
+        .detail-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 576px) {
+            .detail-container {
+                padding: 1.5rem;
+            }
+            
+            .detail-title {
+                font-size: 1.5rem;
+            }
+            
+            .detail-actions {
+                flex-direction: column;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                margin-bottom: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <div class="detail-header">
+            <h1 class="detail-title">
+                <i class="fas fa-user-graduate"></i>
+                Student Details
+            </h1>
+        </div>
+
+        <div class="student-details">
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span class="detail-value">{{ student.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">{{ student.email }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Phone:</span>
+                <span class="detail-value">{{ student.phone_number }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Class:</span>
+                <span class="detail-value">{{ student.student_class }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">
+                    {% if student.authorized %}
+                        Authorized <span class="status-badge status-authorized">Active</span>
+                    {% else %}
+                        Unauthorized <span class="status-badge status-unauthorized">Inactive</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-actions">
+            <a href="{% url 'student-list' %}" class="btn btn-primary">
+                <i class="fas fa-list"></i> Back to List
+            </a>
+            <a href="{% url 'student-authorize' pk=student.pk %}" class="btn btn-success">
+                <i class="fas fa-user-check"></i> Authorize
+            </a>
+            <a href="{% url 'student-delete' pk=student.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Delete
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add hover effect to student details card
+        const studentDetails = document.querySelector('.student-details');
+        studentDetails.addEventListener('mouseenter', () => {
+            studentDetails.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+        });
+        studentDetails.addEventListener('mouseleave', () => {
+            studentDetails.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        });
+    </script>
+</body>
+</html>

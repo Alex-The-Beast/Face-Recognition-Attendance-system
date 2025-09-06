@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorize Student</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .auth-form-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-form-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-title {
+            color: var(--accent);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+        }
+
+        .student-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail {
+            display: flex;
+            margin-bottom: 0.8rem;
+            color: var(--light);
+        }
+
+        .detail strong {
+            min-width: 120px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-label {
+            margin-left: 0.5rem;
+            color: var(--light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 576px) {
+            .auth-form-container {
+                padding: 1.5rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+            }
+            
+            .btn-secondary, .btn-submit {
+                width: 100%;
+            }
+            
+            .detail {
+                flex-direction: column;
+            }
+            
+            .detail strong {
+                margin-bottom: 0.2rem;
+            }
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-authorized {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .status-unauthorized {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-form-container">
+        <div class="form-header">
+            <h1 class="form-title">
+                <i class="fas fa-user-graduate"></i>
+                Authorize Student
+            </h1>
+            <p class="form-subtitle">Manage student authorization for face recognition access</p>
+        </div>
+
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="student-details">
+            <div class="detail">
+                <strong>Name:</strong> 
+                <span>{{ student.name }}</span>
+            </div>
+            <div class="detail">
+                <strong>Email:</strong> 
+                <span>{{ student.email }}</span>
+            </div>
+            <div class="detail">
+                <strong>Phone:</strong> 
+                <span>{{ student.phone_number }}</span>
+            </div>
+            <div class="detail">
+                <strong>Class:</strong> 
+                <span>{{ student.student_class }}</span>
+            </div>
+            <div class="detail">
+                <strong>Status:</strong> 
+                <span>
+                    {% if student.authorized %} 
+                        Authorized <span class="status-badge status-authorized">Active</span>
+                    {% else %} 
+                        Unauthorized <span class="status-badge status-unauthorized">Inactive</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <input type="checkbox" id="authorized" name="authorized" class="checkbox-input" 
+                       {% if student.authorized %} checked {% endif %}>
+                <label for="authorized" class="form-label">Authorize this student</label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i> Update Authorization
+            </button>
+            
+            <div class="form-footer">
+                <a href="{% url 'student-list' %}" class="btn-secondary">
+                    <i class="fas fa-list"></i> Back to List
+                </a>
+                <a href="{% url 'student-detail' pk=student.pk %}" class="btn-secondary">
+                    <i class="fas fa-info-circle"></i> View Details
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        const checkbox = document.getElementById('authorized');
+        const statusBadge = document.querySelector('.detail:last-child .status-badge');
+        
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                statusBadge.textContent = 'Active';
+                statusBadge.className = 'status-badge status-authorized';
+            } else {
+                statusBadge.textContent = 'Inactive';
+                statusBadge.className = 'status-badge status-unauthorized';
+            }
+        });
+    </script>
+</body>
+</html>

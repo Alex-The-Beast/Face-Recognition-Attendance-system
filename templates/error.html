@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Occurred</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --danger: #dc3545;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            background-image: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .error-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            padding: 3rem 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1.5rem;
+            animation: shake 0.5s infinite alternate;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        .error-title {
+            color: var(--danger);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .home-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .suggestions {
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: left;
+            margin-top: 2rem;
+            border-left: 4px solid var(--danger);
+        }
+
+        .suggestions-title {
+            color: var(--danger);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .suggestions-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .suggestions-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .suggestions-list li::before {
+            content: "•";
+            color: var(--danger);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -3px;
+        }
+
+        @media (max-width: 576px) {
+            .error-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .error-title {
+                font-size: 1.8rem;
+            }
+            
+            .error-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1 class="error-title">Error Occurred</h1>
+        <p class="error-message">{{ error_message }}</p>
+        
+        <a href="{% url 'home' %}" class="home-btn">
+            <i class="fas fa-home"></i> Return to Home
+        </a>
+        
+        <div class="suggestions">
+            <h3 class="suggestions-title">Suggested Fixes:</h3>
+            <ul class="suggestions-list">
+                <li>Ensure that the camera is connected properly</li>
+                <li>Check the IP address and port settings in the camera configuration</li>
+                <li>Make sure the camera is powered on and accessible from your network</li>
+                <li>Verify that the required permissions are granted to access the camera</li>
+                <li>Consult the camera's manual for troubleshooting steps</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
