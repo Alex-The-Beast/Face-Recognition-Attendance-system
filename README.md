@@ -108,7 +108,7 @@
 ### **Step 1: Clone Repository**
 ```bash
 # 📥 Clone the project
-git clone <your-repository-url>
+git clone "https://github.com/Alex-The-Beast/Face-Recognition-Attendance-system.git"
 cd Face-Recognition-Attendance-system
 ```
 
