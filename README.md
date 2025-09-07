@@ -109,7 +109,7 @@
 ```bash
 # 📥 Clone the project
 git clone <your-repository-url>
-cd Project-Face-attandence-system-version-1.0
+cd Face-Recognition-Attendance-system
 ```
 
 ### **Step 2: Virtual Environment Setup**
